@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import _ from 'lodash'
 
 import {
   readEvents
 } from '../actions'
-
 
 class EventsIndex extends Component {
 
@@ -13,22 +13,39 @@ class EventsIndex extends Component {
     this.props.readEvents()
   }
 
+  renderEvents(){
+    return _.map(this.props.events,(event,index)=>(
+      <tr key={index}>
+        <td>{event.id}</td>
+        <td>{event.title}</td>
+        <td>{event.body}</td>
+      </tr>
+    ))
+  }
+
   render() {
     const props = this.props
 
     return (
-      <>
-        <div>value: {props.value}</div>
-        <button onClick={props.imcrement}>+1</button>
-        <button onClick={props.decrement}>-1</button>
-      </>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Title</th>
+            <th>Body</th>
+          </tr>
+        </thead>
+        <tbody>
+          {this.renderEvents()}
+        </tbody>
+      </table>
     );
   }
 }
 
-const mapStateToProps = state => ({})
+const mapStateToProps = state => ({ events: state.events })
 const mapDispatchToProps = dispatch => ({
-  readEvents: () => dispatch(readEvents()),
+  readEvents: () => dispatch(readEvents()), // readEventsではaxiosを扱う、この関数を経由してReducerにdispathされるイメージ
 })
 
 export default connect(mapStateToProps,mapDispatchToProps)(EventsIndex)
