@@ -11,3 +11,57 @@ import thunk from 'redux-thunk'
 const store = createStore(reducer,applyMiddleware(thunk))
 ```
 
+# react-router
+
+ページ遷移する際に必要。
+
+```js
+// トップレベルのコンポーネント
+// URLを叩いた時のルーティング
+
+import {
+  BrowserRouter,
+  Route,
+  Switch
+} from 'react-router-dom'
+
+ReactDOM.render(
+  <Provider store={store}>
+    <BrowserRouter>
+      <Switch>
+        {/* <Route exact path="/events/new" component={EventsNew} /> */}
+        <Route exact path="/" component={EventsIndex} />
+      </Switch>
+    </BrowserRouter>
+  </Provider>, 
+  document.getElementById('root')
+);
+
+// 子コンポーネントでのページ遷移
+import { Link } from 'react-router-dom'
+```
+
+# redux-form
+
+https://redux-form.com/8.2.2/docs/gettingstarted.md/
+
+handelSubmitをrenderメソッドの中で取り出して使うあたりが分かりづらいかも。this.propsには`export default combineReducers({ events,form })`をした事でredux-formのreducerが含まれている。
+
+```js
+render() {
+    const { handelSubmit } = this.props
+    return (
+
+      <form onSubmit={handelSubmit(this.onSubmit)}>
+      ~ 略 ~
+```
+
+入力がない場合はsubmitを非活性・連打が出来ない
+
+```js
+// pristine 何も入力されていない状態かどうかをtrue・false
+// submitting submitされたらtrue
+const { handleSubmit,pristine,submitting } = this.props
+~ 略 ~
+<input type="submit" value="Submit" disabled={pristine || submitting} />
+```
